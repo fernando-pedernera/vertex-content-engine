@@ -529,7 +529,7 @@ th { font-family: 'Geist Mono', monospace; font-size: 11px; text-transform: uppe
 let LANG = "en";
 
 function resolveImgPath(relPath) {
-  if (location.protocol === "file:") return "../" + relPath;
+  if (location.protocol === "file:" || location.pathname.includes("/dashboard")) return "../" + relPath;
   return "/" + relPath;
 }
 
