@@ -1,5 +1,7 @@
 # Vertex Autonomous AI Content Engine (`ComfyUI API` + `Character LoRA` + `Wan 2.1` + `Claude Code MCP`)
 
+**Author:** **Fernando Pedernera** — AI Engineer · [GitHub](https://github.com/fernando-pedernera) · [LinkedIn](https://www.linkedin.com/in/fernando-pedernera/)
+
 > **Production-grade headless AI Creator pipeline:** Generates thousands of photoreal, identity-locked stills and vertical 720p video reels per month on rented GPUs at **`$0.0013 / approved image`** and **`$0.0569 / approved 5s video clip`** (**97.5% cheaper** than hosted web tools), orchestrated end-to-end by **Claude Code**, **Model Context Protocol (MCP)**, and an automated **6-Point Vision Quality Gate**.
 
 ---
@@ -54,17 +56,37 @@ Implemented in [`src/vertex_engine/unit_economics.py`](src/vertex_engine/unit_ec
 
 ```mermaid
 flowchart TD
-    CC["Claude Code Agent\n(CLAUDE.md + .mcp.json)"] -->|JSON-RPC 2.0| MCP["Vertex MCP Server\n(src/vertex_engine/mcp_server.py)"]
-    MCP -->|1. Audit Hook Retention & Views| FA["Format Growth Engine\n(DOUBLE_DOWN / ITERATE / KILL)"]
-    MCP -->|2. Mutate API Graph| WB["ComfyWorkflowBuilder\n(LoRA 0.85, Guidance 2.2, Seed, Grain)"]
-    WB -->|3. Dispatch Keyframe Batch| GPU1["RunPod RTX 4090 Worker\n(Flux.1-dev FP8 + FaceDetailer)"]
-    GPU1 -->|Raw Keyframes| QG{"6-Point Vision Quality Gate\nLight · Skin · Hands · Head · Text · Edit"}
-    QG -->|FAIL: Drop Pre-Video\nSaves 35x GPU Cost| REJ["Auto-Remediation Log"]
-    QG -->|PASS: 90% Standard Motion| GPU2["RunPod A100/H100 Worker\n(Wan 2.1 14B FP8 + TeaCache + SageAttn2 + RIFE 32fps)"]
-    QG -->|PASS: 10% Complex Physics| API["Hybrid API Router\n(Kling 1.6 Pro / Seedance)"]
-    GPU2 --> PUB["Clean H.264 MP4 Output\n(Metadata Stripped for Multi-Account Publishing)"]
-    API --> PUB
+    subgraph S1["1. Agent Control Plane"]
+        CC["Claude Code Agent"] --> MCP["Python MCP Server"]
+        MCP --> FA["Format Analytics"]
+        MCP --> WB["ComfyUI DAG Builder"]
+    end
+
+    subgraph S2["2. Keyframe Generation"]
+        WB --> GPU1["RunPod RTX 4090"]
+        GPU1 --> FLUX["Flux.1-dev FP8 + LoRA"]
+        FLUX --> FD["FaceDetailer + Grain"]
+    end
+
+    subgraph S3["3. Vision Quality Gate"]
+        FD --> QG{"6-Point QA Check"}
+        QG -->|Fail| REJ["Drop Pre-Video"]
+    end
+
+    subgraph S4["4. Hybrid Video Engine"]
+        QG -->|Pass 90%| WAN["Wan 2.1 14B + TeaCache"]
+        QG -->|Pass 10%| API["Kling / Seedance API"]
+        WAN --> MP4["Clean H.264 MP4 Reel"]
+        API --> MP4
+    end
 ```
+
+| Stage | Module | Key Parameters & Engineering Role |
+| :--- | :--- | :--- |
+| **1. Control Plane** | [`mcp_server.py`](src/vertex_engine/mcp_server.py) + [`format_analytics.py`](src/vertex_engine/format_analytics.py) | Exposes 5 JSON-RPC MCP tools to Claude Code; reads 3s hook retention (`>68%`) to trigger `DOUBLE_DOWN` or `KILL`. |
+| **2. Keyframe Engine** | [`workflow_builder.py`](src/vertex_engine/workflow_builder.py) + [`01_flux_dev...json`](workflows/01_flux_dev_character_lora_iphone_api.json) | Mutates headless ComfyUI DAG (`FluxGuidance=2.2`, Character LoRA `0.85`, 24mm optics LoRA `0.42`, `FaceDetailer` `0.32`). |
+| **3. Quality Gate** | [`quality_gate.py`](src/vertex_engine/quality_gate.py) | Scores `light`, `skin`, `hands`, `head_size`, `sign_text`, and `edit_style` + ArcFace similarity (`>0.89`) before I2V compute. |
+| **4. Video Engine** | [`comfy_runner.py`](src/vertex_engine/comfy_runner.py) + [`02_wan21...json`](workflows/02_wan21_14b_i2v_teacache_api.json) | Runs **Wan 2.1 14B FP8 + SageAttention2 + TeaCache (`0.16`) + RIFE 32fps** on Spot A100s; strips metadata via `VHS_VideoCombine`. |
 
 ---
 
