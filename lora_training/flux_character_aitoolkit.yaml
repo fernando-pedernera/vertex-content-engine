@@ -1,0 +1,60 @@
+# ostris/ai-toolkit Configuration for Photorealistic Character LoRA (Flux.1-dev)
+# Hardware Target: RunPod 1x RTX 4090 (24GB VRAM) or L40S
+# Training Time: ~38 mins | Compute Cost: ~$0.44 on RunPod Spot
+---
+job: extension
+config:
+  name: "elena_rossi_flux_v2"
+  process:
+    - type: "sd_trainer"
+      training_folder: "output/lora_models"
+      device: "cuda:0"
+      trigger_word: "elenav2"
+      network:
+        type: "lora"
+        linear: 32             # Rank 32 captures fine facial asymmetry & freckles without overfitting outfits
+        linear_alpha: 16       # Alpha = Rank/2 prevents oversaturated contrast & plastic skin sheen
+      save:
+        dtype: float16
+        save_every: 250
+        max_step_saves_to_keep: 6
+      datasets:
+        - folder_path: "datasets/elena_rossi_curated_28"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.05
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          # Multi-resolution aspect bucketing prevents the "giant head / bobblehead" crop bias!
+          # Dataset Breakdown: 40% close-up portrait, 40% medium waist-up, 20% full-body street shots
+          resolution: [768, 1024]
+      train:
+        batch_size: 2
+        steps: 2000
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw8bit"
+        lr: 1e-4
+        ema_config:
+          use_ema: true
+          ema_decay: 0.99
+        dtype: bf16
+      model:
+        name_or_path: "black-forest-labs/FLUX.1-dev"
+        is_flux: true
+        quantize: true
+      sample:
+        sampler: "flowmatch"
+        sample_every: 250
+        width: 896
+        height: 1152
+        prompts:
+          - "IMG_2091.HEIC, candid iPhone photo of elenav2 sitting at a Brooklyn coffee shop, natural morning sunlight, visible skin pores, holding an espresso cup"
+          - "IMG_4412.HEIC, full body street snapshot of elenav2 walking in SoHo wearing an olive trench coat, overcast daylight, natural head-to-body proportions"
+        neg: ""
+        seed: 42
+        walk_seed: true
+        guidance_scale: 2.2
+        sample_steps: 24

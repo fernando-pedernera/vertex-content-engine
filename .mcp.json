@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "vertex-content-engine": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.vertex_engine.mcp_server"
+      ],
+      "env": {
+        "COMFYUI_ENDPOINT": "http://127.0.0.1:8188",
+        "RUNPOD_ENDPOINT_ID": "vmg-comfy-wan21-serverless",
+        "VERTEX_ENGINE_MODE": "dry_run"
+      }
+    }
+  }
+}

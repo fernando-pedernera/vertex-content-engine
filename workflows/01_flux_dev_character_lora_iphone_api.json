@@ -1,0 +1,207 @@
+{
+  "10": {
+    "inputs": {
+      "unet_name": "flux1-dev-fp8.safetensors",
+      "weight_dtype": "fp8_e4m3fn"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model (Flux.1-dev FP8)"
+    }
+  },
+  "11": {
+    "inputs": {
+      "clip_name1": "t5xxl_fp8_e4m3fn.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "type": "flux"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "DualCLIPLoader (FP8 T5 + CLIP-L)"
+    }
+  },
+  "12": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "15": {
+    "inputs": {
+      "lora_name": "elena_rossi_flux_v2.safetensors",
+      "strength_model": 0.85,
+      "strength_clip": 0.85,
+      "model": ["10", 0],
+      "clip": ["11", 0]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Character Identity LoRA (Locked Face & Proportions)"
+    }
+  },
+  "16": {
+    "inputs": {
+      "lora_name": "amateur_iphone15_candid_v4.safetensors",
+      "strength_model": 0.42,
+      "strength_clip": 0.40,
+      "model": ["15", 0],
+      "clip": ["15", 1]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Anti-Plastic Skin & iPhone 24mm Optics LoRA"
+    }
+  },
+  "20": {
+    "inputs": {
+      "clip_l": "IMG_4821.HEIC, candid iPhone 15 Pro snapshot of elenav2, 23yo Italian-American woman, natural unretouched skin texture with visible pores, slight morning sunlight, anatomically accurate hands, casual framing",
+      "t5xxl": "IMG_4821.HEIC, raw unedited smartphone photo of elenav2, a 23-year-old Italian-American woman with dark chestnut wavy hair, hazel-green eyes, subtle freckles on nose bridge, small gold hoop earrings. Sitting at an outdoor marble bistro table in Brooklyn, morning sunlight casting soft natural shadows, holding a ceramic espresso cup with five natural fingers. Shot on 24mm f/1.78 iPhone lens, deep depth of field, authentic skin micro-texture, zero studio airbrushing.",
+      "guidance": 2.2,
+      "clip": ["16", 1]
+    },
+    "class_type": "CLIPTextEncodeFlux",
+    "_meta": {
+      "title": "Flux Prompt & Low Guidance (2.2 = Natural Skin, No Plastic Sheen)"
+    }
+  },
+  "25": {
+    "inputs": {
+      "width": 896,
+      "height": 1152,
+      "batch_size": 1
+    },
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {
+      "title": "Empty Latent (896x1152 - 4:5 Social Feed Ratio)"
+    }
+  },
+  "30": {
+    "inputs": {
+      "max_shift": 1.15,
+      "base_shift": 0.5,
+      "width": 896,
+      "height": 1152,
+      "model": ["16", 0]
+    },
+    "class_type": "ModelSamplingFlux",
+    "_meta": {
+      "title": "ModelSamplingFlux"
+    }
+  },
+  "31": {
+    "inputs": {
+      "scheduler": "beta",
+      "steps": 24,
+      "denoise": 1.0,
+      "model": ["30", 0]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "Beta Scheduler (24 Steps)"
+    }
+  },
+  "32": {
+    "inputs": {
+      "sampler_name": "deis"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "Sampler (DEIS - Sharp Micro-Texture)"
+    }
+  },
+  "33": {
+    "inputs": {
+      "noise_seed": 849201442
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "Seed Generator"
+    }
+  },
+  "34": {
+    "inputs": {
+      "model": ["30", 0],
+      "conditioning": ["20", 0]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "35": {
+    "inputs": {
+      "noise": ["33", 0],
+      "guider": ["34", 0],
+      "sampler": ["32", 0],
+      "sigmas": ["31", 0],
+      "latent_image": ["25", 0]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "40": {
+    "inputs": {
+      "samples": ["35", 0],
+      "vae": ["12", 0]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "45": {
+    "inputs": {
+      "guide_size": 512,
+      "guide_size_for": true,
+      "max_size": 1024,
+      "seed": 849201442,
+      "steps": 14,
+      "cfg": 1.8,
+      "sampler_name": "euler",
+      "scheduler": "beta",
+      "denoise": 0.32,
+      "feather": 12,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "bbox_threshold": 0.5,
+      "bbox_dilation": 10,
+      "bbox_crop_factor": 2.5,
+      "image": ["40", 0],
+      "model": ["30", 0],
+      "clip": ["16", 1],
+      "vae": ["12", 0],
+      "positive": ["20", 0]
+    },
+    "class_type": "FaceDetailer",
+    "_meta": {
+      "title": "FaceDetailer (Subtle 0.32 Denoise for Wide-Shot Identity Lock)"
+    }
+  },
+  "50": {
+    "inputs": {
+      "grain_intensity": 0.018,
+      "saturation_mix": 0.25,
+      "toe_shadow_lift": 0.01,
+      "image": ["45", 0]
+    },
+    "class_type": "ImageFilmGrain",
+    "_meta": {
+      "title": "iPhone Sensor Luminance Grain (Anti-AI Detection)"
+    }
+  },
+  "60": {
+    "inputs": {
+      "filename_prefix": "vertex_engine/elena_rossi/keyframe",
+      "images": ["50", 0]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Keyframe for Vision Quality Gate"
+    }
+  }
+}

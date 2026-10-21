@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex Content Engine — Autonomous AI Creator Pipeline & Telemetry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F3F3F0;
+  --bg2: #EAEAE6;
+  --card: #FBFBF9;
+  --ink: #141413;
+  --ink2: rgba(20,20,19,.64);
+  --ink3: rgba(20,20,19,.42);
+  --line: rgba(20,20,19,.12);
+  --line2: rgba(20,20,19,.22);
+  --accent: #FF4A1C;
+  --red: #C2361A;
+  --green: #2E7A4E;
+  --max: 1380px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Instrument Sans', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 80px;
+}
+.mono {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 42px);
+}
+header {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  margin-top: 12px;
+  padding: 0 16px;
+}
+.topbar {
+  max-width: var(--max);
+  margin: 0 auto;
+  height: 56px;
+  background: rgba(243,243,240,.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px 0 22px;
+}
+.brand {
+  font-weight: 600;
+  letter-spacing: .12em;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pill {
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+.pill.ok { background: var(--green); }
+.pill.bad { background: var(--red); }
+.lang-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+}
+.hero {
+  padding: 52px 0 36px;
+  border-bottom: 1px solid var(--line);
+}
+.hero h1 {
+  font-size: clamp(30px, 3.8vw, 52px);
+  font-weight: 500;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+  max-width: 24em;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero p {
+  margin-top: 14px;
+  color: var(--ink2);
+  max-width: 52em;
+  font-size: 17px;
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+@media(max-width: 860px) { .kpis { grid-template-columns: 1fr 1fr; } }
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 18px;
+  padding: 20px;
+}
+.kpi .val {
+  font-size: clamp(26px, 2.6vw, 38px);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  margin-top: 6px;
+}
+.kpi .sub {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-top: 4px;
+}
+section { padding-top: 48px; }
+.sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.sec-head h2 {
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-weight: 500;
+  letter-spacing: -.03em;
+}
+.qa-layout {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+@media(max-width: 980px) { .qa-layout { grid-template-columns: 1fr; } }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+@media(max-width: 720px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+.shot {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease;
+}
+.shot:hover { transform: translateY(-3px); }
+.shot.active { border-color: var(--ink); box-shadow: 0 10px 24px -12px rgba(0,0,0,0.25); }
+.shot.reject.active { border-color: var(--red); }
+.shot img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+}
+.shot .meta { padding: 10px; font-size: 12px; }
+.shot .meta b { display: block; font-size: 13px; margin-bottom: 3px; }
+.inspector, .panel {
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 20px;
+  padding: 24px;
+}
+.inspector-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.axes { display: grid; gap: 11px; margin-top: 16px; }
+.axis-row { background: var(--bg); border-radius: 10px; padding: 10px 12px; }
+.axis-hdr { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+.bar-bg { height: 6px; background: var(--bg2); border-radius: 99px; margin: 6px 0; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; background: var(--green); transition: width .3s ease; }
+.bar-fill.fail { background: var(--red); }
+.axis-note { font-size: 12px; color: var(--ink2); }
+.fix-box {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 13px;
+}
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 18px;
+}
+@media(max-width: 920px) { .sim-grid { grid-template-columns: 1fr; } }
+.ctrl-group { margin-bottom: 16px; }
+.ctrl-group label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+input[type=range] { width: 100%; accent-color: var(--ink); }
+select, input[type=text], input[type=number] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line2);
+  font: inherit;
+  font-size: 14px;
+  background: #fff;
+}
+.btn-run {
+  background: var(--ink);
+  color: var(--bg);
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.btn-run:hover { background: #2c2c2a; }
+.codebox {
+  background: #141413;
+  color: #EAEAE6;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  max-height: 360px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+.toggles { display: grid; gap: 8px; margin-top: 14px; }
+.tog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+.tog input { accent-color: var(--ink); width: 16px; height: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); }
+th { font-family: 'Geist Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--ink2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <span>VERTEX // CONTENT ENGINE</span>
+      <span class="pill ok">MCP + PYTHON READY</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="mono" id="hdr-sub">Creadora: @elena.rossi.nyc (LoRA v2) · Flota RunPod</span>
+      <button class="lang-btn" id="lang-btn" onclick="toggleLang()">Idioma: ES (Cambiar a EN)</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <span class="mono" id="hero-kicker">Pipeline Autónomo · ComfyUI API + Character LoRA + Wan 2.1 + Claude Code MCP</span>
+    <h1 style="margin-top:10px" id="hero-title">Miles de piezas fotorrealistas al mes. <em>A una fracción del coste de herramientas web.</em></h1>
+    <p id="hero-desc">Motor sin interfaz manual (headless) que ejecuta Flux.1-dev + Character LoRAs y Wan 2.1 14B (FP8 + TeaCache + SageAttention2) con un Inspector de Calidad por Visión de 6 ejes que descarta fotos defectuosas antes de gastar GPU de video.</p>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="mono" id="kpi1-lbl">Coste por Foto (Engine v2)</span>
+        <div class="val">$0.0013</div>
+        <div class="sub">Flux.1-dev FP8 + LoRA en Spot 4090</div>
+      </div>
+      <div class="kpi">
+        <span class="mono" id="kpi2-lbl">Video Clip 5s Aprobado</span>
+        <div class="val">$0.0569</div>
+        <div class="sub">-97.5% vs $2.25 en herramientas web</div>
+      </div>
+      <div class="kpi">
+        <span class="mono" id="kpi3-lbl">Consistencia Facial (LoRA)</span>
+        <div class="val">0.941</div>
+        <div class="sub">Similitud Coseno ArcFace Media</div>
+      </div>
+      <div class="kpi">
+        <span class="mono" id="kpi4-lbl">Ahorro Filtro Pre-Video</span>
+        <div class="val">35x</div>
+        <div class="sub">Más barato filtrar foto que video</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 2-SECOND VISUAL QUALITY GATE -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <span class="mono" id="s1-kicker">01 / Consistencia de Personaje e Inspector de Calidad en 2 Segundos</span>
+        <h2 id="s1-title">Haz clic en cualquier imagen para ver el diagnóstico de los 6 ejes</h2>
+      </div>
+      <span class="mono">Light · Skin · Hands · Head Size · Sign Text · Edit Style</span>
+    </div>
+
+    <div class="qa-layout">
+      <div class="gallery" id="gallery"></div>
+      <div class="inspector" id="inspector"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: UNIT ECONOMICS & HALVE-THE-COST SIMULATOR -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <span class="mono" id="s2-kicker">02 / Calculadora de Unit Economics y Cómo Reducir el Coste a la Mitad</span>
+        <h2 id="s2-title">Simulador en Vivo: GPUs Alquiladas vs. Herramientas Alojadas</h2>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+      <div class="panel">
+        <div class="ctrl-group">
+          <label><span id="lbl-m-img">Imágenes Aprobadas / Mes</span><b id="lbl-imgs">3,000</b></label>
+          <input type="range" id="rng-imgs" min="500" max="15000" step="500" value="3000">
+        </div>
+        <div class="ctrl-group">
+          <label><span id="lbl-m-vid">Clips de Video 5s Aprobados / Mes</span><b id="lbl-vids">1,000</b></label>
+          <input type="range" id="rng-vids" min="100" max="5000" step="100" value="1000">
+        </div>
+        <span class="mono" style="display:block;margin-top:12px" id="lbl-levers">4 Palancas Técnicas para Reducir el Coste a la Mitad:</span>
+        <div class="toggles">
+          <label class="tog"><input type="checkbox" id="opt-qa" checked> <span><b>1. Pre-I2V Vision Quality Gate</b> (Filtra manos de 6 dedos/piel plástica antes del video)</span></label>
+          <label class="tog"><input type="checkbox" id="opt-tea" checked> <span><b>2. TeaCache (0.16) + SageAttention2</b> (-49% tiempo de inferencia en Wan 2.1)</span></label>
+          <label class="tog"><input type="checkbox" id="opt-fp8" checked> <span><b>3. Cuantización FP8 + Workers Calientes en VRAM</b> (Cero tiempo muerto de carga)</span></label>
+          <label class="tog"><input type="checkbox" id="opt-spot" checked> <span><b>4. Flota RunPod Spot</b> ($1.19/h vs $1.89/h en A100 80GB)</span></label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>Etapa / Métrica</th>
+              <th>Webs Alojadas</th>
+              <th>ComfyUI v1</th>
+              <th>Tu Configuración</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Foto Aprobada ($/img)</b></td>
+              <td>$0.0650</td>
+              <td>$0.0052</td>
+              <td id="sim-img-cost" style="font-weight:600;color:var(--green)">$0.0013</td>
+            </tr>
+            <tr>
+              <td><b>Video 5s Aprobado ($/clip)</b></td>
+              <td>$2.2500</td>
+              <td>$0.1342</td>
+              <td id="sim-vid-cost" style="font-weight:600;color:var(--green)">$0.0569</td>
+            </tr>
+            <tr>
+              <td><b>Tasa de Éxito en Video (%)</b></td>
+              <td>65.0%</td>
+              <td>59.5%</td>
+              <td id="sim-yield">89.0%</td>
+            </tr>
+            <tr>
+              <td><b>Gasto Total Mensual</b></td>
+              <td id="sim-hosted-tot">$2,445</td>
+              <td id="sim-v1-tot">$150</td>
+              <td id="sim-cur-tot" style="font-weight:600;font-size:18px">$61</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="fix-box" style="margin-top:20px" id="sim-summary"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: INTERACTIVE COMFYUI API GRAPH & BATCH LAB -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <span class="mono">03 / Laboratorio en Vivo: Generador de Grafos ComfyUI API & Ejecutor de Lotes</span>
+        <h2 id="s3-title">Prueba cómo el Agente inyecta parámetros en el JSON de ComfyUI</h2>
+      </div>
+    </div>
+    <div class="sim-grid">
+      <div class="panel">
+        <div class="ctrl-group">
+          <label><span>Creadora Virtual (Character Registry)</span></label>
+          <select id="lab-creator" onchange="buildLiveGraph()">
+            <option value="elena_rossi">Elena Rossi (@elena.rossi.nyc) — Trigger: elenav2</option>
+            <option value="chiara_benedetti">Chiara Benedetti (@chiara.benedetti) — Trigger: chiarav1</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <label><span>Tipo de Workflow ComfyUI API</span></label>
+          <select id="lab-wf" onchange="buildLiveGraph()">
+            <option value="flux_keyframe">01. Flux.1-dev FP8 + Character LoRA + FaceDetailer (Foto)</option>
+            <option value="wan21_i2v">02. Wan 2.1 14B FP8 + TeaCache + SageAttention2 (Video I2V)</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <label><span>Flux Guidance (2.0–2.2 evita piel plástica)</span><b id="lbl-guid">2.2</b></label>
+          <input type="range" id="lab-guid" min="1.5" max="4.0" step="0.1" value="2.2" oninput="buildLiveGraph()">
+        </div>
+        <div class="ctrl-group">
+          <label><span>Fuerza del Character LoRA (0.85 evita cabeza gigante)</span><b id="lbl-lora">0.85</b></label>
+          <input type="range" id="lab-lora" min="0.5" max="1.2" step="0.05" value="0.85" oninput="buildLiveGraph()">
+        </div>
+        <div class="ctrl-group">
+          <label><span>Prompt de Escena</span></label>
+          <input type="text" id="lab-prompt" value="sitting at an outdoor marble bistro table in Brooklyn, morning sunlight, holding an espresso cup" oninput="buildLiveGraph()">
+        </div>
+        <button class="btn-run" onclick="runLiveBatch()">Ejecutar Lote Completo (Flux -> QA Gate -> Wan 2.1)</button>
+      </div>
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="mono">Payload JSON Generado para POST /prompt (ComfyUI Headless API)</span>
+          <span class="pill ok" id="lab-status">LISTO</span>
+        </div>
+        <pre class="codebox" id="lab-json"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: VIRAL FORMAT MATRIX -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <span class="mono">04 / Ingeniería de Formatos y Alcance</span>
+        <h2 id="s4-title">Testear, Leer Vistas, Matar lo que no viaja, Doblar apuesta en lo que funciona</h2>
+      </div>
+    </div>
+    <div class="panel" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Formato</th>
+            <th>Gancho (Hook)</th>
+            <th>Vistas Totales</th>
+            <th>Retención 3s</th>
+            <th>% Visto</th>
+            <th>Shares/1k</th>
+            <th>Decisión</th>
+            <th>Acción Autónoma del Agente</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Late-Night NYC Bodega POV</b></td>
+            <td>Giro de mirada 2.8s + texto relatable</td>
+            <td>2,840,000</td>
+            <td>76.4%</td>
+            <td>64.2%</td>
+            <td>14.8</td>
+            <td><span class="pill ok">DOUBLE_DOWN</span></td>
+            <td>Escalar al 60% del lote de GPU de mañana en 5 cuentas</td>
+          </tr>
+          <tr>
+            <td><b>Brooklyn vs. Praiano 6-Slide Roll</b></td>
+            <td>Carrusel mixto foto/video (re-entrega de IG)</td>
+            <td>1,920,000</td>
+            <td>71.2%</td>
+            <td>58.0%</td>
+            <td>11.2</td>
+            <td><span class="pill ok">DOUBLE_DOWN</span></td>
+            <td>Generar 4 variantes de locación vía Claude Code MCP</td>
+          </tr>
+          <tr>
+            <td><b>Fit-Check Mirror Cut</b></td>
+            <td>Cambio de outfit al segundo 1.4s</td>
+            <td>410,000</td>
+            <td>56.0%</td>
+            <td>41.5%</td>
+            <td>4.1</td>
+            <td><span class="pill" style="background:#B58114">ITERATE</span></td>
+            <td>Mantener estética; probar 3 ganchos de texto más rápidos</td>
+          </tr>
+          <tr>
+            <td><b>Slow-Mo Studio Runway Walk</b></td>
+            <td>Cámara lenta estilo anuncio de estudio</td>
+            <td>28,400</td>
+            <td>31.5%</td>
+            <td>19.2%</td>
+            <td>0.6</td>
+            <td><span class="pill bad">KILL</span></td>
+            <td>Terminado automáticamente. Parece anuncio artificial; no viaja.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+let LANG = "en";
+
+function resolveImgPath(relPath) {
+  if (location.protocol === "file:") return "../" + relPath;
+  return "/" + relPath;
+}
+
+const SAMPLES = [
+  {
+    id: "elena_01_cafe",
+    title: "01. Brooklyn Bistro",
+    img: "assets/showcase/elena_01_cafe.jpg",
+    passed: true,
+    arcface: 0.942,
+    composite: 9.25,
+    axes: [
+      { name: "Light (Luz)", score: 9.3, min: 7.8, es: "Sombras matutinas coherentes con el reflejo en la mesa de mármol.", en: "Soft morning directional shadows match marble table reflections." },
+      { name: "Skin (Piel)", score: 9.4, min: 8.2, es: "Poros reales y pecas sutiles en la nariz; cero brillo plástico (Flux guidance=2.2).", en: "Natural dermal pores & subtle nose-bridge freckles; zero plastic sheen (Flux guidance=2.2)." },
+      { name: "Hands (Manos)", score: 9.1, min: 8.5, es: "5 dedos anatómicamente perfectos sosteniendo la taza de espresso.", en: "5 anatomically accurate fingers holding espresso cup handle." },
+      { name: "Head Size (Cabeza)", score: 9.2, min: 8.0, es: "Proporción craneal natural 1:7.5 respecto a los hombros.", en: "True 1:7.5 cranial-to-shoulder proportion." },
+      { name: "Sign Text (Carteles)", score: 9.0, min: 7.5, es: "Fondo limpio sin letras deformes generadas por IA.", en: "Clean background street elements, zero AI glyph hallucinations." },
+      { name: "Edit Style (Encuadre)", score: 9.5, min: 8.0, es: "Óptica real de iPhone 24mm + 0.018 de grano de sensor.", en: "24mm iPhone camera roll framing + 0.018 luminance sensor grain." }
+    ],
+    fixEs: "APROBADA POR QUALITY GATE -> Enviada a cola de video Wan 2.1 14B ($0.0569/clip).",
+    fixEn: "PASSED QUALITY GATE -> Queued for Wan 2.1 14B I2V ($0.0569/clip)."
+  },
+  {
+    id: "elena_02_terrace",
+    title: "02. Praiano Dusk",
+    img: "assets/showcase/elena_02_terrace.jpg",
+    passed: true,
+    arcface: 0.936,
+    composite: 9.23,
+    axes: [
+      { name: "Light (Luz)", score: 9.5, min: 7.8, es: "Contraluz cálido de atardecer envolviendo el cabello de forma física.", en: "Golden hour warm rim lighting wraps naturally around hair strands." },
+      { name: "Skin (Piel)", score: 9.2, min: 8.2, es: "Subsurface scattering realista en pómulo y oreja.", en: "Realistic subsurface scattering on cheekbone and ear." },
+      { name: "Hands (Manos)", score: 8.9, min: 8.5, es: "Postura natural y limpia.", en: "Clean natural posture." },
+      { name: "Head Size (Cabeza)", score: 9.1, min: 8.0, es: "Geometría facial y distancia interpupilar bloqueadas.", en: "Consistent facial geometry and inter-pupillary distance." },
+      { name: "Sign Text (Carteles)", score: 9.4, min: 7.5, es: "Sin artefactos de texto en la terraza costera.", en: "No text artifacts in coastal terrace background." },
+      { name: "Edit Style (Encuadre)", score: 9.3, min: 8.0, es: "Foto espontánea riendo; parece tomada por un amigo en la mesa.", en: "Candid mid-laugh snapshot; zero posed stock look." }
+    ],
+    fixEs: "APROBADA POR QUALITY GATE -> Enviada a cola de video Wan 2.1 14B ($0.0569/clip).",
+    fixEn: "PASSED QUALITY GATE -> Queued for Wan 2.1 14B I2V ($0.0569/clip)."
+  },
+  {
+    id: "elena_03_street",
+    title: "03. NYC Bodega Night",
+    img: "assets/showcase/elena_03_street.jpg",
+    passed: true,
+    arcface: 0.928,
+    composite: 8.98,
+    axes: [
+      { name: "Light (Luz)", score: 9.0, min: 7.8, es: "Mezcla realista de luz fluorescente de tienda y farola nocturna.", en: "Mixed fluorescent + sodium street light falloff on charcoal hoodie." },
+      { name: "Skin (Piel)", score: 9.1, min: 8.2, es: "Textura de piel nocturna sin suavizado artificial.", en: "Authentic smartphone night-mode luminance noise." },
+      { name: "Hands (Manos)", score: 8.8, min: 8.5, es: "Curvatura natural de dedos junto al bolsillo.", en: "Natural finger curvature near pocket." },
+      { name: "Head Size (Cabeza)", score: 9.0, min: 8.0, es: "Proporciones exactas con auriculares sobre el cuello.", en: "Accurate proportions with silver over-ear headphones." },
+      { name: "Sign Text (Carteles)", score: 8.6, min: 7.5, es: "Escaparate trasero supera control OCR.", en: "Background storefront passes OCR legibility check." },
+      { name: "Edit Style (Encuadre)", score: 9.4, min: 8.0, es: "Estética callejera nocturna de alto alcance orgánico.", en: "High-reach casual NYC night aesthetic." }
+    ],
+    fixEs: "APROBADA POR QUALITY GATE -> Enviada a cola de video Wan 2.1 14B ($0.0569/clip).",
+    fixEn: "PASSED QUALITY GATE -> Queued for Wan 2.1 14B I2V ($0.0569/clip)."
+  },
+  {
+    id: "elena_04_coast",
+    title: "04. Amalfi Swim",
+    img: "assets/showcase/elena_04_coast.jpg",
+    passed: true,
+    arcface: 0.948,
+    composite: 9.38,
+    axes: [
+      { name: "Light (Luz)", score: 9.6, min: 7.8, es: "Sol directo del Mediterráneo con reflejos reales en gotas de agua.", en: "Hard Mediterranean sun with physically accurate water droplet speculars." },
+      { name: "Skin (Piel)", score: 9.5, min: 8.2, es: "Micro-textura de piel húmeda, gesto natural al sol, pecas intactas.", en: "Wet skin micro-texture, natural sun squint, freckles locked." },
+      { name: "Hands (Manos)", score: 9.0, min: 8.5, es: "Primer plano limpio sobre los hombros.", en: "Close-up framing above shoulders." },
+      { name: "Head Size (Cabeza)", score: 9.3, min: 8.0, es: "Perspectiva exacta de lente móvil 24mm en primer plano.", en: "Matches 24mm mobile close-up perspective." },
+      { name: "Sign Text (Carteles)", score: 9.5, min: 7.5, es: "Fondo limpio de mar.", en: "Pure coastal water background." },
+      { name: "Edit Style (Encuadre)", score: 9.4, min: 8.0, es: "Estética de carrete de verano (mismo benchmark que Chiara).", en: "Top-performing summer camera roll aesthetic." }
+    ],
+    fixEs: "APROBADA POR QUALITY GATE -> Enviada a cola de video Wan 2.1 14B ($0.0569/clip).",
+    fixEn: "PASSED QUALITY GATE -> Queued for Wan 2.1 14B I2V ($0.0569/clip)."
+  },
+  {
+    id: "qa_rejected_sample",
+    title: "05. QA REJECTED",
+    img: "assets/showcase/qa_rejected_sample.jpg",
+    passed: false,
+    arcface: 0.812,
+    composite: 3.82,
+    axes: [
+      { name: "Light (Luz)", score: 5.2, min: 7.8, es: "FALLO: Brillo sintético de estudio choca con el interior del café.", en: "FAIL: Harsh synthetic studio rim-light conflicts with cafe interior." },
+      { name: "Skin (Piel)", score: 3.4, min: 8.2, es: "FALLO CRÍTICO: Piel cerosa como muñeca de plástico (Flux guidance > 3.5).", en: "CRITICAL FAIL: Waxy plastic sheen (Flux guidance > 3.5 over-baked)." },
+      { name: "Hands (Manos)", score: 2.1, min: 8.5, es: "FALLO CRÍTICO: Mano mutada con 6 dedos agarrando la taza.", en: "CRITICAL FAIL: 6 mutated fingers detected gripping coffee mug." },
+      { name: "Head Size (Cabeza)", score: 6.4, min: 8.0, es: "FALLO: Cabeza 14% desproporcionada respecto al torso.", en: "FAIL: Bobblehead macro-crop bias (+14% cranial ratio)." },
+      { name: "Sign Text (Carteles)", score: 1.8, min: 7.5, es: "FALLO CRÍTICO: Texto ilegible ('MENU MEA / JUNDY / LFY'skeeCY') en la pizarra.", en: "CRITICAL FAIL: Garbled pseudo-Latin AI gibberish on chalkboard." },
+      { name: "Edit Style (Encuadre)", score: 4.0, min: 8.0, es: "FALLO: Grita 'IA barata de 2024' en menos de 2 segundos.", en: "FAIL: Screams '2024 AI slop' — fake bokeh + centered doll pose." }
+    ],
+    fixEs: "BLOQUEADA ANTES DEL VIDEO (Ahorró $0.08 de GPU). Corrección automática: Bajar Flux guidance de 3.5 a 2.2, LoRA a 0.85 y desenfocar pizarra.",
+    fixEn: "DROPPED PRE-VIDEO (Saved $0.08 I2V GPU compute). Auto-Fix: Lower Flux guidance 3.5 -> 2.2, LoRA weight 1.0 -> 0.85, mask background text."
+  }
+];
+
+let curIdx = 0;
+
+function renderGallery(selectedIdx = 0) {
+  curIdx = selectedIdx;
+  const gal = document.getElementById("gallery");
+  gal.innerHTML = SAMPLES.map((s, idx) => `
+    <div class="shot ${s.passed ? '' : 'reject'} ${idx === selectedIdx ? 'active' : ''}" onclick="renderGallery(${idx})">
+      <img src="${resolveImgPath(s.img)}" alt="${s.title}">
+      <div class="meta">
+        <b>${s.title}</b>
+        <span class="pill ${s.passed ? 'ok' : 'bad'}">${s.passed ? 'PASS ' + s.composite : 'REJECT ' + s.composite}</span>
+      </div>
+    </div>
+  `).join("");
+
+  const item = SAMPLES[selectedIdx];
+  const insp = document.getElementById("inspector");
+  insp.innerHTML = `
+    <div class="inspector-top">
+      <div>
+        <span class="mono">Asset ID: ${item.id} · ArcFace Lock: ${item.arcface}</span>
+        <h3 style="font-size:20px;margin-top:2px">${item.title}</h3>
+      </div>
+      <span class="pill ${item.passed ? 'ok' : 'bad'}">${item.passed ? 'APPROVED FOR I2V' : 'BLOCKED BY QA GATE'}</span>
+    </div>
+    <div class="axes">
+      ${item.axes.map(a => {
+        const ok = a.score >= a.min;
+        return `
+          <div class="axis-row">
+            <div class="axis-hdr">
+              <span>${a.name} (min ${a.min})</span>
+              <span style="color:${ok ? 'var(--green)' : 'var(--red)'}">${a.score} / 10</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill ${ok ? '' : 'fail'}" style="width:${a.score * 10}%"></div></div>
+            <div class="axis-note">${LANG === 'es' ? a.es : a.en}</div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+    <div class="fix-box">${LANG === 'es' ? item.fixEs : item.fixEn}</div>
+  `;
+}
+
+function updateSim() {
+  const imgs = Number(document.getElementById("rng-imgs").value);
+  const vids = Number(document.getElementById("rng-vids").value);
+  document.getElementById("lbl-imgs").textContent = imgs.toLocaleString();
+  document.getElementById("lbl-vids").textContent = vids.toLocaleString();
+
+  const qa = document.getElementById("opt-qa").checked;
+  const tea = document.getElementById("opt-tea").checked;
+  const fp8 = document.getElementById("opt-fp8").checked;
+  const spot = document.getElementById("opt-spot").checked;
+
+  let imgSec = 19.5;
+  if (fp8) imgSec *= 0.62;
+  if (tea) imgSec *= 0.68;
+
+  let vidSec = 145.0;
+  if (fp8) vidSec *= 0.72;
+  if (tea) vidSec *= 0.69;
+
+  const imgRate = (spot ? 0.39 : 0.69) / 3600;
+  const vidRate = (spot ? 1.19 : 1.89) / 3600;
+
+  const yieldRate = qa ? 0.89 : 0.595;
+  const imgCost = ((imgSec * imgRate) + (qa ? 0.00025 : 0)) / 0.86;
+  const rawVid = vidSec * vidRate;
+  const vidCost = ((0.9 * rawVid + 0.1 * 0.28) / yieldRate) + imgCost;
+
+  const hostedTot = Math.round(imgs * 0.065 + vids * 2.25);
+  const v1Tot = Math.round(imgs * 0.0052 + vids * 0.1342);
+  const curTot = Math.round(imgs * imgCost + vids * vidCost);
+
+  document.getElementById("sim-img-cost").textContent = "$" + imgCost.toFixed(4);
+  document.getElementById("sim-vid-cost").textContent = "$" + vidCost.toFixed(4);
+  document.getElementById("sim-yield").textContent = (yieldRate * 100).toFixed(1) + "%";
+  document.getElementById("sim-hosted-tot").textContent = "$" + hostedTot.toLocaleString();
+  document.getElementById("sim-v1-tot").textContent = "$" + v1Tot.toLocaleString();
+  document.getElementById("sim-cur-tot").textContent = "$" + curTot.toLocaleString();
+
+  const redVsV1 = ((1 - vidCost / 0.1342) * 100).toFixed(1);
+  const redVsHosted = ((1 - vidCost / 2.25) * 100).toFixed(1);
+  document.getElementById("sim-summary").textContent = LANG === "es"
+    ? `Configuración Activa: $${vidCost.toFixed(4)} por video aprobado (${redVsV1}% más barato que ComfyUI v1 sin optimizar, y ${redVsHosted}% más barato que webs alojadas). Ahorro anual: $${((hostedTot - curTot) * 12).toLocaleString()}/año.`
+    : `Active Config: $${vidCost.toFixed(4)} / approved clip (${redVsV1}% cheaper than unoptimized ComfyUI v1, ${redVsHosted}% cheaper than Hosted SaaS). Annual saving: $${((hostedTot - curTot) * 12).toLocaleString()}/yr.`;
+}
+
+function buildLiveGraph() {
+  const creator = document.getElementById("lab-creator").value;
+  const wf = document.getElementById("lab-wf").value;
+  const guid = Number(document.getElementById("lab-guid").value);
+  const lora = Number(document.getElementById("lab-lora").value);
+  const prompt = document.getElementById("lab-prompt").value;
+
+  document.getElementById("lbl-guid").textContent = guid.toFixed(1);
+  document.getElementById("lbl-lora").textContent = lora.toFixed(2);
+
+  const trigger = creator === "elena_rossi" ? "elenav2" : "chiarav1";
+  const loraFile = creator === "elena_rossi" ? "elena_rossi_flux_v2.safetensors" : "chiara_benedetti_flux_v1.safetensors";
+
+  if (location.protocol !== "file:") {
+    fetch("/api/build-workflow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pipeline_type: wf, creator_id: creator, scene_prompt: prompt, flux_guidance: guid, lora_strength: lora })
+    })
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById("lab-status").textContent = "PYTHON API LIVE";
+        document.getElementById("lab-json").textContent = JSON.stringify(d.comfy_api_graph, null, 2);
+      })
+      .catch(() => renderFallbackJson(wf, trigger, loraFile, guid, lora, prompt));
+  } else {
+    renderFallbackJson(wf, trigger, loraFile, guid, lora, prompt);
+  }
+}
+
+function renderFallbackJson(wf, trigger, loraFile, guid, lora, prompt) {
+  const preview = wf === "flux_keyframe" ? {
+    "10": { "class_type": "UNETLoader", "inputs": { "unet_name": "flux1-dev-fp8.safetensors", "weight_dtype": "fp8_e4m3fn" } },
+    "15": { "class_type": "LoraLoader", "inputs": { "lora_name": loraFile, "strength_model": lora, "strength_clip": lora } },
+    "20": { "class_type": "CLIPTextEncodeFlux", "inputs": { "guidance": guid, "t5xxl": `IMG_4821.HEIC, raw unedited iPhone 15 Pro photo of ${trigger}, ${prompt}. Natural skin pores, 5 fingers.` } },
+    "45": { "class_type": "FaceDetailer", "inputs": { "denoise": 0.32, "guide_size": 512 } },
+    "50": { "class_type": "ImageFilmGrain", "inputs": { "grain_intensity": 0.018 } }
+  } : {
+    "10": { "class_type": "WanVideoModelLoader", "inputs": { "model": "wan2.1_i2v_720p_14B_fp8_e4m3fn.safetensors", "attention_mode": "sageattn" } },
+    "12": { "class_type": "WanVideoTeaCache", "inputs": { "rel_l1_thresh": 0.16, "start_step": 4 } },
+    "30": { "class_type": "WanVideoImageToVideoEncode", "inputs": { "width": 720, "height": 1280, "num_frames": 81 } },
+    "60": { "class_type": "VHS_VideoCombine", "inputs": { "frame_rate": 32, "format": "video/h264-mp4", "save_metadata": false } }
+  };
+  document.getElementById("lab-json").textContent = JSON.stringify(preview, null, 2);
+}
+
+function runLiveBatch() {
+  const creator = document.getElementById("lab-creator").value;
+  const prompt = document.getElementById("lab-prompt").value;
+  document.getElementById("lab-status").textContent = "EJECUTANDO LOTE...";
+  if (location.protocol !== "file:") {
+    fetch("/api/run-batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ creator_id: creator, scene_prompt: prompt, optimize: true })
+    })
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById("lab-status").textContent = "LOTE COMPLETADO ($" + d.effective_cost_per_approved_clip_usd + "/clip)";
+        document.getElementById("lab-json").textContent = JSON.stringify(d, null, 2);
+      });
+  } else {
+    document.getElementById("lab-status").textContent = "SIMULACIÓN COMPLETADA ($0.0252/clip)";
+    document.getElementById("lab-json").textContent = JSON.stringify({
+      batch_id: "vmg-batch-live",
+      creator_id: creator,
+      keyframes_requested: 5,
+      keyframes_approved: 4,
+      keyframes_rejected: 1,
+      videos_rendered: 4,
+      total_gpu_seconds: 329.0,
+      effective_cost_per_approved_clip_usd: 0.0252
+    }, null, 2);
+  }
+}
+
+function toggleLang() {
+  LANG = LANG === "es" ? "en" : "es";
+  document.getElementById("lang-btn").textContent = LANG === "es" ? "Idioma: ES (Cambiar a EN)" : "Language: EN (Switch to ES)";
+  document.getElementById("hero-title").innerHTML = LANG === "es"
+    ? "Miles de piezas fotorrealistas al mes. <em>A una fracción del coste de herramientas web.</em>"
+    : "Thousands of photoreal pieces a month. <em>A fraction of hosted tool cost.</em>";
+  document.getElementById("s1-title").textContent = LANG === "es"
+    ? "Haz clic en cualquier imagen para ver el diagnóstico de los 6 ejes"
+    : "Click any frame to inspect the 6-Point Realism Verdict";
+  document.getElementById("s2-title").textContent = LANG === "es"
+    ? "Simulador en Vivo: GPUs Alquiladas vs. Herramientas Alojadas"
+    : "Live GPU Telemetry vs. Hosted Tools";
+  renderGallery(curIdx);
+  updateSim();
+}
+
+["rng-imgs", "rng-vids", "opt-qa", "opt-tea", "opt-fp8", "opt-spot"].forEach(id => {
+  document.getElementById(id).addEventListener("input", updateSim);
+});
+
+renderGallery(0);
+updateSim();
+buildLiveGraph();
+toggleLang();
+toggleLang();
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+{
+  "10": {
+    "inputs": {
+      "model": "wan2.1_i2v_720p_14B_fp8_e4m3fn.safetensors",
+      "base_precision": "bf16",
+      "quantization": "fp8_e4m3fn",
+      "load_device": "main_device",
+      "attention_mode": "sageattn"
+    },
+    "class_type": "WanVideoModelLoader",
+    "_meta": {
+      "title": "Wan 2.1 14B I2V Loader (FP8 + SageAttention2)"
+    }
+  },
+  "12": {
+    "inputs": {
+      "rel_l1_thresh": 0.16,
+      "start_step": 4,
+      "end_step": -1,
+      "cache_device": "main_device",
+      "model": ["10", 0]
+    },
+    "class_type": "WanVideoTeaCache",
+    "_meta": {
+      "title": "TeaCache Temporal Acceleration (~1.9x Faster Inference)"
+    }
+  },
+  "14": {
+    "inputs": {
+      "lora": "elena_rossi_wan21_motion_v1.safetensors",
+      "strength": 0.80,
+      "model": ["12", 0]
+    },
+    "class_type": "WanVideoLoraSelect",
+    "_meta": {
+      "title": "Character Motion & Facial Structure LoRA (Wan 2.1)"
+    }
+  },
+  "20": {
+    "inputs": {
+      "image": "approved_keyframe_01.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load QA-Approved Keyframe"
+    }
+  },
+  "22": {
+    "inputs": {
+      "clip_name": "open_clip_pytorch_model.safetensors"
+    },
+    "class_type": "CLIPVisionLoader",
+    "_meta": {
+      "title": "Load OpenCLIP Vision Encoder"
+    }
+  },
+  "25": {
+    "inputs": {
+      "positive_prompt": "Handheld iPhone video, young woman elenav2 sitting at an outdoor cafe table, glances up from her espresso cup toward the camera with a subtle natural smile, wind gently moving strands of dark wavy hair, natural micro-expressions, realistic handheld smartphone camera sway.",
+      "negative_prompt": "morphing face, extra fingers, deformed hands, plastic skin, slow motion, robotic movement, CGI, airbrushed, flickering lighting, distorted background text, oversized head",
+      "t5_encoder": "umt5-xxl-enc-bf16.safetensors"
+    },
+    "class_type": "WanVideoTextEncode",
+    "_meta": {
+      "title": "Wan 2.1 Motion Conditioning"
+    }
+  },
+  "30": {
+    "inputs": {
+      "width": 720,
+      "height": 1280,
+      "num_frames": 81,
+      "noise_aug_strength": 0.02,
+      "image": ["20", 0],
+      "clip_vision": ["22", 0]
+    },
+    "class_type": "WanVideoImageToVideoEncode",
+    "_meta": {
+      "title": "I2V Latent Encode (720x1280 Vertical Reel, 81 Frames @ 16fps)"
+    }
+  },
+  "35": {
+    "inputs": {
+      "steps": 24,
+      "cfg": 5.0,
+      "shift": 5.0,
+      "seed": 991827364,
+      "scheduler": "unipc",
+      "riflex_freq_index": 0,
+      "model": ["14", 0],
+      "text_embeds": ["25", 0],
+      "image_embeds": ["30", 0]
+    },
+    "class_type": "WanVideoSampler",
+    "_meta": {
+      "title": "Wan 2.1 UniPC Sampler (24 Steps w/ TeaCache)"
+    }
+  },
+  "40": {
+    "inputs": {
+      "vae": "wan_2.1_vae.safetensors",
+      "samples": ["35", 0]
+    },
+    "class_type": "WanVideoDecode",
+    "_meta": {
+      "title": "Wan 2.1 VAE Decode"
+    }
+  },
+  "50": {
+    "inputs": {
+      "ckpt_name": "rife47.pth",
+      "multiplier": 2,
+      "fast_mode": true,
+      "ensemble": true,
+      "frames": ["40", 0]
+    },
+    "class_type": "RIFE VFI",
+    "_meta": {
+      "title": "RIFE 4.7 Frame Interpolation (16fps -> 32fps Native Reel Feel)"
+    }
+  },
+  "60": {
+    "inputs": {
+      "frame_rate": 32,
+      "loop_count": 0,
+      "filename_prefix": "vertex_engine/elena_rossi/reel_clip",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 18,
+      "save_metadata": false,
+      "images": ["50", 0]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Export Clean H.264 MP4 (Metadata Stripped for Multi-Account Publishing)"
+    }
+  }
+}

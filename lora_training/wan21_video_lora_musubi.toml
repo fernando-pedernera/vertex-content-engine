@@ -1,0 +1,29 @@
+# musubi-tuner Configuration for Wan 2.1 14B Video Character LoRA
+# Ensures facial identity holds during 60-degree head turns and speaking/laughing motion
+[model]
+dit_path = "models/diffusion_models/wan2.1_i2v_720p_14B_fp8_e4m3fn.safetensors"
+vae_path = "models/vae/wan_2.1_vae.safetensors"
+t5_path = "models/text_encoders/models_t5_umt5-xxl-enc-bf16.pth"
+clip_path = "models/clip_vision/open_clip_pytorch_model.safetensors"
+
+[dataset]
+video_directory = "datasets/elena_rossi_video_clips"
+resolution = [512, 896]
+frame_sample_count = 33
+batch_size = 1
+enable_bucket = true
+
+[network]
+network_module = "networks.lora_wan"
+network_dim = 16
+network_alpha = 16
+
+[optimizer]
+optimizer_type = "AdamW8bit"
+learning_rate = 1e-4
+lr_scheduler = "cosine_with_restarts"
+max_train_steps = 800
+mixed_precision = "bf16"
+gradient_checkpointing = true
+fp8_base = true
+blocks_to_swap = 16

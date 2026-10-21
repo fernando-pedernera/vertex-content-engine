@@ -1,0 +1,289 @@
+{
+  "batch_id": "vmg-batch-868518d3",
+  "creator_id": "elena_rossi",
+  "execution_mode": "optimized_spot_v2",
+  "keyframes_requested": 5,
+  "keyframes_approved": 4,
+  "keyframes_rejected": 1,
+  "videos_rendered": 4,
+  "wan21_local_clips": 4,
+  "hybrid_api_clips": 0,
+  "total_gpu_seconds": 329.0,
+  "total_batch_cost_usd": 0.1009,
+  "effective_cost_per_approved_clip_usd": 0.0252,
+  "qa_verdicts": [
+    {
+      "asset_id": "elena_01_cafe",
+      "image_path": "assets/showcase/elena_01_cafe.jpg",
+      "passed": true,
+      "composite_score": 9.25,
+      "identity_similarity": 0.942,
+      "criteria": {
+        "light": {
+          "axis": "light",
+          "score": 9.3,
+          "min_threshold": 7.8,
+          "passed": true,
+          "diagnostic_note": "Natural morning shadows on marble table match sun angle; soft highlight roll-off on cheekbones."
+        },
+        "skin": {
+          "axis": "skin",
+          "score": 9.4,
+          "min_threshold": 8.2,
+          "passed": true,
+          "diagnostic_note": "Visible dermal micro-texture and subtle nose-bridge freckles; zero plastic sheen."
+        },
+        "hands": {
+          "axis": "hands",
+          "score": 9.1,
+          "min_threshold": 8.5,
+          "passed": true,
+          "diagnostic_note": "5 anatomically accurate fingers holding espresso cup handle with natural tendon tension."
+        },
+        "head_size": {
+          "axis": "head_size",
+          "score": 9.2,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "Natural 1:7.5 cranial-to-shoulder proportion."
+        },
+        "sign_text": {
+          "axis": "sign_text",
+          "score": 9.0,
+          "min_threshold": 7.5,
+          "passed": true,
+          "diagnostic_note": "Clean background street elements with no garbled AI glyphs."
+        },
+        "edit_style": {
+          "axis": "edit_style",
+          "score": 9.5,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "Authentic 24mm iPhone camera roll framing; natural sensor luminance noise."
+        }
+      },
+      "rejection_reasons": [],
+      "recommended_fix": "Approved for Wan 2.1 / Kling I2V queue."
+    },
+    {
+      "asset_id": "elena_02_terrace",
+      "image_path": "assets/showcase/elena_02_terrace.jpg",
+      "passed": true,
+      "composite_score": 9.23,
+      "identity_similarity": 0.936,
+      "criteria": {
+        "light": {
+          "axis": "light",
+          "score": 9.5,
+          "min_threshold": 7.8,
+          "passed": true,
+          "diagnostic_note": "Warm Praiano dusk rim-light consistent across hair strands and linen shirt folds."
+        },
+        "skin": {
+          "axis": "skin",
+          "score": 9.2,
+          "min_threshold": 8.2,
+          "passed": true,
+          "diagnostic_note": "Natural olive skin tone with subsurface scattering on ear and jawline."
+        },
+        "hands": {
+          "axis": "hands",
+          "score": 8.9,
+          "min_threshold": 8.5,
+          "passed": true,
+          "diagnostic_note": "Relaxed posture, natural wrist anatomy."
+        },
+        "head_size": {
+          "axis": "head_size",
+          "score": 9.1,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "Accurate medium-shot cranial proportion."
+        },
+        "sign_text": {
+          "axis": "sign_text",
+          "score": 9.4,
+          "min_threshold": 7.5,
+          "passed": true,
+          "diagnostic_note": "No text artifacts in coastal background."
+        },
+        "edit_style": {
+          "axis": "edit_style",
+          "score": 9.3,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "Candid mid-laugh smartphone aesthetic; looks taken by a friend across the table."
+        }
+      },
+      "rejection_reasons": [],
+      "recommended_fix": "Approved for Wan 2.1 / Kling I2V queue."
+    },
+    {
+      "asset_id": "elena_03_street",
+      "image_path": "assets/showcase/elena_03_street.jpg",
+      "passed": true,
+      "composite_score": 8.98,
+      "identity_similarity": 0.928,
+      "criteria": {
+        "light": {
+          "axis": "light",
+          "score": 9.0,
+          "min_threshold": 7.8,
+          "passed": true,
+          "diagnostic_note": "Mixed NYC ambient dusk + fluorescent storefront glow behaves physically on hoodie fabric."
+        },
+        "skin": {
+          "axis": "skin",
+          "score": 9.1,
+          "min_threshold": 8.2,
+          "passed": true,
+          "diagnostic_note": "Unretouched night-mode smartphone skin texture."
+        },
+        "hands": {
+          "axis": "hands",
+          "score": 8.8,
+          "min_threshold": 8.5,
+          "passed": true,
+          "diagnostic_note": "Anatomically clean hands near hoodie pocket."
+        },
+        "head_size": {
+          "axis": "head_size",
+          "score": 9.0,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "Balanced proportions with over-ear headphones."
+        },
+        "sign_text": {
+          "axis": "sign_text",
+          "score": 8.6,
+          "min_threshold": 7.5,
+          "passed": true,
+          "diagnostic_note": "Storefront background passes OCR sanity check."
+        },
+        "edit_style": {
+          "axis": "edit_style",
+          "score": 9.4,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "High-converting casual street snapshot format."
+        }
+      },
+      "rejection_reasons": [],
+      "recommended_fix": "Approved for Wan 2.1 / Kling I2V queue."
+    },
+    {
+      "asset_id": "elena_04_coast",
+      "image_path": "assets/showcase/elena_04_coast.jpg",
+      "passed": true,
+      "composite_score": 9.38,
+      "identity_similarity": 0.948,
+      "criteria": {
+        "light": {
+          "axis": "light",
+          "score": 9.6,
+          "min_threshold": 7.8,
+          "passed": true,
+          "diagnostic_note": "Direct Mediterranean sunlight with realistic specular reflections on water droplets."
+        },
+        "skin": {
+          "axis": "skin",
+          "score": 9.5,
+          "min_threshold": 8.2,
+          "passed": true,
+          "diagnostic_note": "Hyper-real wet skin pores, natural sun squint, zero airbrushing."
+        },
+        "hands": {
+          "axis": "hands",
+          "score": 9.0,
+          "min_threshold": 8.5,
+          "passed": true,
+          "diagnostic_note": "Clean collar/neck framing."
+        },
+        "head_size": {
+          "axis": "head_size",
+          "score": 9.3,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "True close-up perspective distortion matching 24mm mobile lens."
+        },
+        "sign_text": {
+          "axis": "sign_text",
+          "score": 9.5,
+          "min_threshold": 7.5,
+          "passed": true,
+          "diagnostic_note": "Natural ocean background."
+        },
+        "edit_style": {
+          "axis": "edit_style",
+          "score": 9.4,
+          "min_threshold": 8.0,
+          "passed": true,
+          "diagnostic_note": "Matches Chiara/Elena summer camera roll benchmark."
+        }
+      },
+      "rejection_reasons": [],
+      "recommended_fix": "Approved for Wan 2.1 / Kling I2V queue."
+    },
+    {
+      "asset_id": "qa_rejected_sample",
+      "image_path": "assets/showcase/qa_rejected_sample.jpg",
+      "passed": false,
+      "composite_score": 3.82,
+      "identity_similarity": 0.812,
+      "criteria": {
+        "light": {
+          "axis": "light",
+          "score": 5.2,
+          "min_threshold": 7.8,
+          "passed": false,
+          "diagnostic_note": "Harsh synthetic studio specular highlights conflict with ambient cafe shadows."
+        },
+        "skin": {
+          "axis": "skin",
+          "score": 3.4,
+          "min_threshold": 8.2,
+          "passed": false,
+          "diagnostic_note": "SEVERE: Waxy plastic sheen (Flux guidance > 3.5 over-baked); zero pore detail."
+        },
+        "hands": {
+          "axis": "hands",
+          "score": 2.1,
+          "min_threshold": 8.5,
+          "passed": false,
+          "diagnostic_note": "CRITICAL: 6 fingers detected on cup grip with fused middle phalanges."
+        },
+        "head_size": {
+          "axis": "head_size",
+          "score": 6.4,
+          "min_threshold": 8.0,
+          "passed": false,
+          "diagnostic_note": "Slight bobblehead macro-crop bias (head 14% oversized relative to shoulders)."
+        },
+        "sign_text": {
+          "axis": "sign_text",
+          "score": 1.8,
+          "min_threshold": 7.5,
+          "passed": false,
+          "diagnostic_note": "CRITICAL: Hallucinated pseudo-Cyrillic/Latin gibberish on background neon sign."
+        },
+        "edit_style": {
+          "axis": "edit_style",
+          "score": 4.0,
+          "min_threshold": 8.0,
+          "passed": false,
+          "diagnostic_note": "Screams '2024 AI slop': centered stock pose + fake Gaussian background blur."
+        }
+      },
+      "rejection_reasons": [
+        "IDENTITY_DRIFT: ArcFace similarity 0.81 < 0.89",
+        "LIGHT_FAIL (5.2/7.8): Harsh synthetic studio specular highlights conflict with ambient cafe shadows.",
+        "SKIN_FAIL (3.4/8.2): SEVERE: Waxy plastic sheen (Flux guidance > 3.5 over-baked); zero pore detail.",
+        "HANDS_FAIL (2.1/8.5): CRITICAL: 6 fingers detected on cup grip with fused middle phalanges.",
+        "HEAD_SIZE_FAIL (6.4/8.0): Slight bobblehead macro-crop bias (head 14% oversized relative to shoulders).",
+        "SIGN_TEXT_FAIL (1.8/7.5): CRITICAL: Hallucinated pseudo-Cyrillic/Latin gibberish on background neon sign.",
+        "EDIT_STYLE_FAIL (4.0/8.0): Screams '2024 AI slop': centered stock pose + fake Gaussian background blur."
+      ],
+      "recommended_fix": "Increase Character LoRA strength to 0.88 or enable FaceDetailer (denoise=0.32). | Lower Flux guidance to 2.0 and specify directional light source (e.g., 'window side-lighting'). | Reduce Flux guidance from 3.5 -> 2.1, increase iPhone candid LoRA to 0.45, add 0.018 sensor grain. | Trigger MediaPipe hand-mask inpaint pass (denoise=0.45) or crop frame above wrist before I2V. | Lower Character LoRA weight from 1.0 -> 0.82; portrait-heavy LoRA datasets inflate head ratio on wide shots. | Mask background signage with Gaussian depth blur or inpaint readable text via Flux Fill. | Remove 'bokeh/portrait' tokens; enforce 'IMG_XXXX.HEIC, 24mm f/1.78 deep depth of field'."
+    }
+  ]
+}
